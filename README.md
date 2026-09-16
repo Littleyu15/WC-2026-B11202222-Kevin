@@ -4,7 +4,7 @@
 ## :notebook_with_decorative_cover: Personal Information
 - Name: 陳黃承諭(CHENG,HUANG CHEN YU)
 - number: B11202222
-- Research Direction: none
+- Research Direction: None
 - Briefly summarize your background and why you want to take this course:
 
 ## :notebook_with_decorative_cover: Assignment
