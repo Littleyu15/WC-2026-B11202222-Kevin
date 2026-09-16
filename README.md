@@ -1,2 +1,6 @@
 # WC-2026-B11202222-Kevin
-NTUST_Wireless_Communication_course_note
+## Personal Profile
+- Name: Kevin
+- Student ID: B11202222
+- Department: Electrical and Computer Engineering (ECE)
+
