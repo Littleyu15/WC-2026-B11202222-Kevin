@@ -416,8 +416,11 @@ Finally, locate:
 Answer:
 
 1. What is the role of the gNB when it transports NAS messages?
+-
 2. What is the difference between RRC and NAS signaling?
+-
 3. Is the Registration Request delivered directly from the UE to the AMF? Explain the protocol path.
+-
 4. Which message confirms that Registration has completed successfully?
 
 ### Checkpoint 4: RRC-to-NGAP/NAS Mapping 
@@ -454,10 +457,13 @@ Find one ICMP Echo Request and its Echo Reply. Confirm that the UE's IP packet i
 
 Answer:
 
+![alt text](image/image-30.png)
 1. What IPv4 address was assigned to the UE?
+- `10.0.0.2`
 2. How many ICMP Echo Request/Reply pairs are present?
+- 10 pairs.
 3. What does the successful Echo Reply prove about the UE connection?
-
+- It prove that the UE have a valid IP address, PDU session has been established successfully, so the traffic packet can connect to Data Network (DN).
 ### Checkpoint 5: UE IP and User Plane — 15 points
 
 - Identify the UE IPv4 address in the PDU Session Establishment Accept. — 6 points
