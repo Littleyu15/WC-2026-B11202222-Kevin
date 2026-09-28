@@ -11,7 +11,7 @@
 
 
 - **LAB1: Analyzing UE–gNB Connectivity in an OAI 5G SA Network **
-    - Assignment Information: [Lab1](https://hackmd.io/A4w9WqU8R4mYgvaWxj6J1A?view)
+    - Assignment Information: [Lab1](./LAB0_&_LAB1.md)
     - **Deadline : 12:00, Sep. 28**
     - Goal:
   In this lab, you will use Wireshark to analyze how a UE establishes an RRC connection with an OAI gNB and then registers with the 5G Core.
