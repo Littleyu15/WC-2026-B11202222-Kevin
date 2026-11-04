@@ -266,12 +266,19 @@ If `pattern2` is present, draw `pattern1` followed by `pattern2`; the combined s
 
 First, count the symbols over **one complete repeating sequence** for each configuration. The two sequences may have different durations, so their raw UL symbol counts alone cannot be used to compare resources per unit time:
 
+
 ```text
 Configured DL symbols = 14 × Full DL slots + Partial DL symbols
 Configured UL symbols = 14 × Full UL slots + Partial UL symbols
 Flexible symbols = Total symbols - Configured DL symbols - Configured UL symbols
 Configured UL symbol share (%) = Configured UL symbols ÷ Total symbols × 100
 ```
+balanced_tdd_pattern: <br>
+![alt text](image/balanced_tdd_pattern.png)
+
+dl_heavy_tdd_pattern: <br>
+![alt text](image/dl_heavy_tdd_pattern.png)
+
 
 For two patterns, sum the counts and durations of both patterns before calculating the share. These are symbol-count shares of the common configuration, not exact airtime measurements or measured throughput shares.
 
@@ -295,9 +302,9 @@ Use the supplied mapping between the reference configuration captures and scenar
 
 | Scenario | Reference TDD setting | JSON traffic direction | Configured UL symbol share (%) | Throughput (Mbps) | Packet loss (%) |
 | --- | --- | --- | ---: | ---: | ---: |
-| A | DL-heavy | downlink | |90.654|0.44295|
-| B | DL-heavy | uplink| | 109.117 | 0.23565|
-| C | Balanced | uplink| | 124.416| 2.133|
+| A | DL-heavy | downlink |22.86 |90.654|0.44295|
+| B | DL-heavy | uplink| 22.86| 109.117 | 0.23565|
+| C | Balanced | uplink|45.71 | 124.416| 2.133|
 
 
 
@@ -395,6 +402,8 @@ Meaning:
 
 Take one screenshot showing the selected packet and these fields.
 
+![alt text](image/image-38.png)
+
 > Some GTP packets are echo or control-related packets. Select one that contains an inner IPv4 packet.
 
 ## 9. Task 7 — TCP Retransmissions
@@ -416,6 +425,15 @@ Record the number of displayed packets:
 | A |14 |
 | B | 12|
 | C | 12|
+
+Scenario A
+![alt text](image/image-39.png)
+
+Scenario B
+![alt text](image/image-41.png)
+
+Scenario C
+![alt text](image/image-40.png)
 
 > Report the number displayed by Wireshark using the specified filter. Counts may vary with Wireshark analysis settings. Include screenshots showing the filter and displayed count for each scenario. The filter includes any TCP flows that Wireshark can decode in the capture; a displayed retransmission is not, by itself, proof of loss in the UDP test.
 
@@ -459,8 +477,9 @@ Record the scenario, display filter, packet numbers, and time interval.
 
 | Scenario | Display filter | Packet numbers | Time interval |
 | --- | --- | --- | --- |
-| | | | |
-
+| `scenario-a-dl-heavy-downlink.pcapng`|tcp.analysis.ack_rtt | 2535 | 65.095 ms|
+|`scenario-b-dl-heavy-uplink.pcapng` |tcp.analysis.ack_rtt|2132 | 56.636 ms|
+| `scenario-c-balanced-uplink.pcapng`| tcp.analysis.ack_rtt| 1474| 11.57 ms|
 **Note:** The time interval depends on the applied display filter. Make sure the selected packets are distinct data packets, not duplicated observations from different capture points. Do not use their interval to infer the TDD slot pattern.
 
 ## 11. Final Questions
