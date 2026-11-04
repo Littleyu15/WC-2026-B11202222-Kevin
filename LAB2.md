@@ -477,9 +477,19 @@ Record the scenario, display filter, packet numbers, and time interval.
 
 | Scenario | Display filter | Packet numbers | Time interval |
 | --- | --- | --- | --- |
-| `scenario-a-dl-heavy-downlink.pcapng`|tcp.analysis.ack_rtt | 2535 | 65.095 ms|
-|`scenario-b-dl-heavy-uplink.pcapng` |tcp.analysis.ack_rtt|2132 | 56.636 ms|
-| `scenario-c-balanced-uplink.pcapng`| tcp.analysis.ack_rtt| 1474| 11.57 ms|
+| `scenario-a-dl-heavy-downlink.pcapng`|udp.time_delta | 2582 | 127 ms|
+|`scenario-b-dl-heavy-uplink.pcapng` |udp.time_delta|1472 | 50.485 ms|
+| `scenario-c-balanced-uplink.pcapng`| udp.time_delta| 1509| 942 ms|
+
+`scenario-a-dl-heavy-downlink.pcapng`: <br>
+![alt text](image/image-43.png)
+
+`scenario-b-dl-heavy-uplink.pcapng`: <br>
+![alt text](image/image-44.png)
+
+`scenario-c-balanced-uplink.pcapng`: <br>
+![alt text](image/image-42.png)
+
 **Note:** The time interval depends on the applied display filter. Make sure the selected packets are distinct data packets, not duplicated observations from different capture points. Do not use their interval to infer the TDD slot pattern.
 
 ## 11. Final Questions
@@ -489,9 +499,12 @@ Answer each question in two or three sentences:
 1. Does Scenario A use a TDD setting that matches its traffic direction?
 - Yes, the direction of Scenario A is downlink, and the number of DL resource is more than UL resource, so Scenario A match   
 2. Why is Scenario B expected to have limited uplink resources? Cite a parameter or count from the DL-heavy SIB1 reference configuration.
+- 
 3. How much does uplink throughput change from B to C?
+- 
 4. What negative result, if any, is visible in C? Support your answer with packet loss or jitter values.
 5. Why can increasing UL resources improve uplink throughput?
+- Because uplink data only can transmitt at UL/ Flexible resources, so more UL resources, the uplink throughput will also increase 
 6. Is adding more UL resources always the best solution? Explain using throughput and packet loss.
 7. Suggest one simple follow-up test that could improve throughput without producing too much packet loss.
 8. What can the configuration captures tell you that the iperf3 JSON cannot? Why are separately recorded configuration captures not direct proof of the configuration during an earlier test?
