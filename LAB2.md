@@ -64,6 +64,7 @@ Complete the table:
 | C |0 |uplink|
 
 **Question:** Does the traffic direction shown in the JSON match the scenario description? Show the proof.
+- Yes. Scenario A has `reverse: 1`, which indicates downlink, while Scenarios B and C have `reverse: 0`, which indicates uplink. These values match the directions in the scenario table.
 
 ## 4. Task 2 — Compare Throughput
 
@@ -100,9 +101,9 @@ Answer:
 2. What is the uplink throughput in Scenario B?
 - 109.117 Mbps
 3. Is the uplink throughput higher in B or C?
-- C is more higher
+- Scenario C is higher: 124.416 Mbps compared with 109.117 Mbps in B.
 4. By approximately what percentage does C improve over B?
-- 14.02 %
+- C improves over B by approximately 14.02%: `(124.416 - 109.117) / 109.117 × 100`.
 
 > Use the JSON `bits_per_second` value. Do not recalculate throughput using the other time fields.
 
@@ -129,12 +130,10 @@ Answer:
 2. Does C have lower packet loss than B?
 - No
 3. What trade-off, if any, is visible when changing from B to C?
-- Maybe they have the different Channel
+- C has higher throughput (124.416 vs. 109.117 Mbps), but also higher packet loss (2.133% vs. 0.23565%) and jitter (0.1620 vs. 0.11619 ms). The measurements show a throughput-versus-quality trade-off; they do not prove that the TDD configuration alone caused the differences.
 
 
-A simple answer format is:
 
-> Compared with Scenario B, Scenario C has ___larger___ throughput, ___larger___ packet loss, and ___larger___ jitter. These results suggest ___maybe higher throughput is not the best solution___.
 
 Use the measured values. If one result improves while another worsens, explain that trade-off. Do not assume that increasing UL resources always increases packet loss.
 
@@ -295,6 +294,7 @@ Next, count the symbols over the **same 5 ms interval** shown in your diagrams. 
 | Balanced | 2.5 | 2 | 68 | 64 | 8 |
 
 **Question:** Can two patterns have the same UL symbol count per period but provide different numbers of UL symbols per unit time? Explain using your two tables.
+- Yes. Both patterns provide 32 configured UL symbols per period, but the DL-heavy period is 5 ms while the balanced period is 2.5 ms. Over the same 5 ms, DL-heavy provides 32 UL symbols (22.86% of its symbols), while balanced repeats twice and provides 64 UL symbols (45.71%).
 
 ### 4.5 Connect SIB1 to the Performance Results
 
@@ -312,9 +312,13 @@ Use the supplied mapping between the reference configuration captures and scenar
 Answer:
 
 1. Which decoded TDD parameters differ between DL-heavy and balanced?
+  - The transmission periodicity differs (5 ms for DL-heavy and 2.5 ms for balanced), as does the number of full downlink slots (7 versus 2). The reference SCS, partial DL/UL symbol counts, full UL slot count, and absence of `pattern2` are the same.
 2. Which configuration provides more configured UL symbols per unit time? Support your answer with the diagram and calculated share.
+  - Balanced provides more: 64 configured UL symbols per 5 ms versus 32 for DL-heavy. Its configured UL symbol share is 45.71%, compared with 22.86% for DL-heavy.
 3. How does that difference help explain the B/C throughput comparison?
+  - Scenario C uses the balanced reference setting and measures 124.416 Mbps uplink, while Scenario B uses the DL-heavy reference setting and measures 109.117 Mbps. The greater configured UL opportunity in C is consistent with its higher throughput, but the separate reference captures and other possible radio/test factors mean this comparison does not establish causation.
 4. Why can A and B use the same SIB1 TDD configuration even though their traffic directions differ?
+  - SIB1 advertises a cell's common TDD configuration; it is not selected separately for each iperf traffic direction. The same DL-heavy pattern can therefore serve both A and B, although it offers fewer configured UL symbols for B's uplink traffic.
 
 > More configured UL resources can provide more opportunities for uplink traffic, but they do not guarantee a proportional throughput increase. Scheduling, radio conditions, overhead, offered traffic, and other radio settings also affect the result. This comparison does not establish that the TDD pattern is the only cause of a performance difference. SIB1 does not show actual slot-by-slot data scheduling. Because the configuration captures were recorded separately, use them as references for the supplied settings, not as independent proof of what was broadcast during each original performance run.
 
@@ -366,7 +370,7 @@ Use these ideas:
 > The configuration captures show the reference broadcast TDD settings. The iperf3 JSON reports performance; it does not contain TDD parameters. The scenario captures are used for traffic analysis and need not include SIB1.
 
 **Question:** Why might Scenario C achieve better uplink throughput than Scenario B? Refer to your SIB1 diagrams and measured results.
-- Becuase of the `time period`, scenario C can transmit more resource than scenario B in the same duration (like 5 ms).
+- The balanced reference pattern repeats twice in 5 ms and provides 64 configured UL symbols, compared with 32 in the DL-heavy pattern. This gives C more configured uplink transmission opportunities and is consistent with its measured 124.416 Mbps versus 109.117 Mbps in B, though the reference captures alone cannot prove the TDD pattern caused the difference.
 ## 8. Task 6 — Find GTP-U Information
 
 Open a **scenario capture** in Wireshark and enter this display filter:
@@ -438,6 +442,7 @@ Scenario C
 > Report the number displayed by Wireshark using the specified filter. Counts may vary with Wireshark analysis settings. Include screenshots showing the filter and displayed count for each scenario. The filter includes any TCP flows that Wireshark can decode in the capture; a displayed retransmission is not, by itself, proof of loss in the UDP test.
 
 **Question:** Do these TCP retransmissions directly represent lost UDP performance packets?
+- No. These retransmissions belong to TCP control traffic, while the iperf3 performance stream is UDP; TCP retransmission counts do not directly measure UDP packet loss. Use the iperf3 UDP `lost_percent` values for the UDP loss comparison.
 
 ## 10. Task 8 — RTT and Packet Interval
 
@@ -497,17 +502,21 @@ Record the scenario, display filter, packet numbers, and time interval.
 Answer each question in two or three sentences:
 
 1. Does Scenario A use a TDD setting that matches its traffic direction?
-- Yes, the direction of Scenario A is downlink, and the number of DL resource is more than UL resource, so Scenario A match   
+- Yes. Scenario A is downlink, and its DL-heavy reference configuration provides 104 DL symbols and 32 UL symbols per 5 ms period, so the configuration favors its traffic direction.
 2. Why is Scenario B expected to have limited uplink resources? Cite a parameter or count from the DL-heavy SIB1 reference configuration.
-- 
+- The DL-heavy pattern has a 5 ms period with 2 full UL slots and 4 additional UL symbols, for 32 configured UL symbols out of 140 total symbols (22.86%). This is fewer UL symbols per unit time than the balanced reference pattern.
 3. How much does uplink throughput change from B to C?
-- 
+- It increases by 15.299 Mbps, from 109.117 Mbps in B to 124.416 Mbps in C. This is an increase of approximately 14.02% relative to B.
 4. What negative result, if any, is visible in C? Support your answer with packet loss or jitter values.
+- C has higher packet loss and jitter than B: 2.133% and 0.1620 ms, compared with 0.23565% and 0.11619 ms in B. Thus, the throughput gain is accompanied by worse loss and jitter in these runs.
 5. Why can increasing UL resources improve uplink throughput?
-- Because uplink data only can transmitt at UL/ Flexible resources, so more UL resources, the uplink throughput will also increase 
+- Uplink data can be scheduled in UL symbols and, when the scheduler assigns them for uplink, flexible symbols. More configured uplink opportunities can let the gNB schedule more UE data, although throughput also depends on radio conditions, scheduling, and other factors.
 6. Is adding more UL resources always the best solution? Explain using throughput and packet loss.
+- No. C gains about 14.02% throughput over B, but its packet loss rises from 0.23565% to 2.133% and its jitter also increases. The preferred setting depends on whether the throughput gain is worth the observed reliability trade-off.
 7. Suggest one simple follow-up test that could improve throughput without producing too much packet loss.
+- Test one intermediate TDD configuration between DL-heavy and balanced, keeping the UE, channel, offered UDP rate, test duration, and other settings unchanged. Repeat the test and compare throughput, packet loss, and jitter to find a setting that raises throughput without an unacceptable loss increase.
 8. What can the configuration captures tell you that the iperf3 JSON cannot? Why are separately recorded configuration captures not direct proof of the configuration during an earlier test?
+- The configuration captures show the broadcast SIB1 TDD parameters, such as periodicity and DL/UL slot and symbol counts; the iperf3 JSON reports traffic direction and measured performance instead. Because the configuration captures were recorded separately, they document reference settings but do not prove that the same configuration was active during an earlier performance run.
 
 ## 12. Submission Checklist
 
