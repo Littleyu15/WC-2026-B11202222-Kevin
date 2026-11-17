@@ -69,11 +69,11 @@ Take screenshots showing the gNB and UE successfully connected.
 **Questions:**
 
 1. Does a successful NG Setup guarantee that a UE can register? Explain.
-- 
+- No. It only confirms that the gNB can communicate with the AMF; UE authentication and subscriber checks must still succeed.
 2. Why can the UE establish an RRC connection but still fail Registration?
-- 
+- RRC establishes the radio connection, while Registration separately checks the UE identity and credentials with the core network.
 3. What additional procedure is required after Registration before user data can be exchanged?
-- 
+- The UE must establish a PDU Session and its user-plane tunnel.
 
 ## 4. Task 2 — Investigate RFsimulator Communication
 
@@ -120,11 +120,11 @@ Take one screenshot showing the TCP connection.
 **Questions:**
 
 1. Why does RFsimulator use a TCP connection instead of a physical antenna?
-- 
+- It carries simulated IQ samples in software, so no physical radio link is needed.
 2. Are the TCP packets exchanged by RFsimulator the same as the UE's application-layer IP packets?
-- 
+- No. They carry radio IQ samples, not the UE's application data.
 3. Does using RFsimulator mean that the UE and gNB are performing no physical-layer processing? Explain.
-- 
+- No. The UE and gNB still process the PHY in software; RFsimulator replaces the radio hardware and channel.
 
 
 ## 5. Task 3 — Verify End-to-End Connectivity
@@ -161,11 +161,11 @@ Take a screenshot of the Ping result.
 **Questions:**
 
 1. Why must Ping use the `oaitun_ue1` interface in this experiment?
-- 
+- It routes the packets through the UE's PDU-session tunnel and 5G user plane.
 2. Does successful Registration guarantee successful user-plane connectivity?
-- 
+- No. A PDU Session and working user-plane routing are also required.
 3. What does a successful Ping prove, and what does it not prove about the simulated 5G system?
-- 
+- It proves IP connectivity to the destination through the configured user plane. It does not prove real over-the-air performance or physical RF behavior.
 
 ## 6. Task 4 — Investigate the Effect of Packet Size
 
@@ -212,13 +212,13 @@ RTT Difference = Average RTT(C) - Average RTT(A) = 6.845 (ms)
 1. Which scenario has the highest average RTT?
 - Scenario B.
 2. Does increasing packet size always increase RTT in your measurements?
-- Not always the Avg RTT, but Max. RTT is always increase.
+- No. Average RTT did not increase consistently in these measurements. The measured maximum RTT increased for each larger packet size.
 3. Why might a larger packet require more transmission or processing resources?
-- Cause large packet require more resource to transmitt entire data.
+- Larger packets contain more data to transmit and process, and may require more radio resources.
 4. What factors other than packet size could affect RTT in a software-based 5G network?
-- 
+- Host CPU load, software scheduling, network queues, and timing variability can affect RTT.
 5. Can these results be interpreted as real over-the-air 5G latency? Explain.
-- 
+- No. They are measurements of this software-based setup and do not include realistic RF conditions or hardware effects.
 
 
 Do not assume that RTT must increase with packet size. Use your measured values to support your explanation.
@@ -268,7 +268,7 @@ Complete the table:
 | RRC connection established? | Yes                                                                        |
 | Registration successful?    | No                                                                         |
 | Error or rejection evidence | log: `[NAS]    Received Registration reject message too short`             |
-| Likely cause                | The IMSI is not the official at the gNB, so the gNB reject the connection. |
+| Likely cause                | The IMSI is not provisioned in the core network's subscriber database, so authentication/registration is rejected. |
 
 If the expected registration rejection does not appear, report the actual logs instead of inventing a failure message.
 
@@ -287,11 +287,11 @@ Confirm that the UE successfully registers again and that Ping works.
 1. Why can the UE potentially synchronize with the gNB even when the IMSI is incorrect?
 - The IMSI doesn't affect the synchronization is success or not, it will only fail when UE want to establish the network connection. 
 2. Which network function is involved in UE authentication?
-- The PDU section
+- The AUSF and UDM handle authentication; the AMF coordinates the procedure.
 3. Why does changing an IMSI affect Registration but not the RFsimulator TCP connection itself?
-- 
+- The IMSI is used for core-network subscriber identification, while the RFsimulator TCP link only carries IQ samples between the UE and gNB.
 4. What evidence proves that restoring the correct configuration solved the problem?
-- 
+- The UE registered successfully with the original IMSI, established its PDU Session, and successfully pinged the External DN.
 
 Evidence of `--uicc0.imsi 001010000000099`, 
 ![alt text](image/image-48.png)
@@ -321,29 +321,28 @@ Complete the comparison:
 **Questions:**
 
 1. Which parts of the 5G system remain functional when physical RF hardware is replaced with RFsimulator?
-- The connection, 
+- The NR protocol stack, PHY processing in software, signaling, core-network procedures, and user-plane data path remain functional.
 2. Why is RFsimulator useful for testing the 5G protocol stack?
-- It remain the function which 5G is using, also the pathloss.
+- It allows repeatable testing of the 5G protocol stack without physical radio hardware.
 3. Why might latency and throughput differ between RFsimulator and a real 5G deployment?
-- Becasue the pathloss of RFsimulator and real 5G is not the 100% same, but it can be a reference.
+- RF conditions, radio hardware, propagation, interference, and software timing differ, affecting latency and throughput.
 4. What would need to change if you wanted to test a physical UE instead of OAI nrUE?
-- If we want to test a physical UE, then we can't use RFsimulator, we should attach a RU or USRP to recieve/ transmitt the signal. 
+- Replace RFsimulator and nrUE with compatible radio hardware (such as an SDR/RU) and configure the gNB to transmit and receive over the air.
 
 ## 9. Final Analysis
 
 Answer each question in three to five sentences.
 
 1. Describe the complete process from starting the OAI 5GC to successful user-plane connectivity.
-- 
+- Start the 5GC, then start the gNB and confirm NG Setup with the AMF. The UE synchronizes, establishes RRC, registers, and establishes a PDU Session. Finally, verify its tunnel and ping the External DN.
 2. Explain the difference between an RFsimulator TCP connection and a 5G PDU Session.
-- 
+- The RFsimulator TCP connection carries IQ samples between the UE and gNB. A PDU Session is a core-network service that provides the UE with user-plane connectivity and an IP address. The two serve different layers and purposes.
 3. Based on your measurements, how did packet size affect RTT and packet loss?
-- In my measureme, there is no packet loss happened in every test. The Max.RTT time is increase when packet size is increase.
+- All three tests had 0% packet loss. Average RTT did not increase consistently (44.045, 54.357, and 50.990 ms). The measured maximum RTT increased with packet size.
 4. Describe the registration failure you introduced and explain how you diagnosed and recovered from it.
-- After the CBRA procedure succeeded, 
+- I changed the UE IMSI to one not provisioned in the subscriber database. The UE still synchronized and established RRC, but registration failed, as shown by the UE/AMF logs. Restoring the original IMSI allowed registration, PDU Session establishment, and Ping to succeed.
 5. Identify two limitations of this simulated environment and explain how they might affect experimental results.
-- 1. The pathloss is fixed, it can't 100% duplicate the real signal loss.
-- 2. 
+- RFsimulator does not reproduce real propagation, interference, or hardware impairments. Radio performance may therefore differ from an over-the-air network. Host CPU load and software timing can also affect measured latency and throughput.
 
 
 ## 10. Submission Checklist
