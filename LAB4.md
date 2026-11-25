@@ -366,7 +366,8 @@ Complete the table:
 | End-to-end Ping works? | Yes, if Lab 3 is completed successfully | Yes, after PDU session and tunnel establishment |
 
 Explain in **3–5 sentences** why splitting a gNB changes the internal RAN interfaces but does not change the UE's need for synchronization, registration and a PDU session.
-Splitting the gNB separates the upper and lower RAN functions and introduces F1-C and F1-U between the CU and DU, while keeping the CU connected to the same 5GC over N2 and N3. This changes internal RAN signaling and data transport, but it does not remove the UE's radio synchronization and RRC procedures. The UE must still acquire SIB1 and SSB information from the DU, establish RRC, and complete NAS Registration through the CU and 5GC. The UE must also receive an IP tunnel and an established PDU session for end-to-end connectivity. Therefore, F1 Setup and a successful Ping are separate milestones: one validates CU-DU integration, while the other validates the complete UE, core and external-DN path.
+
+- Splitting the gNB separates the upper and lower RAN functions and introduces F1-C and F1-U between the CU and DU, while keeping the CU connected to the same 5GC over N2 and N3. This changes internal RAN signaling and data transport, but it does not remove the UE's radio synchronization and RRC procedures. The UE must still acquire SIB1 and SSB information from the DU, establish RRC, and complete NAS Registration through the CU and 5GC. The UE must also receive an IP tunnel and an established PDU session for end-to-end connectivity. Therefore, F1 Setup and a successful Ping are separate milestones: one validates CU-DU integration, while the other validates the complete UE, core and external-DN path.
 ---
 
 ## 9. Troubleshooting
