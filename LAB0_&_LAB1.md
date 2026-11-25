@@ -41,24 +41,24 @@
 Go to [wireshark website](https://www.wireshark.org/download.html) and choose version to download 
 
 Choose Components you want to install\
-![alt text](image/image-3.png)
+![alt text](image/LAB0&LAB1/image-3.png)
 
 Creat the icon in desktop\
-![alt text](image/image-4.png)
+![alt text](image/LAB0&LAB1/image-4.png)
 
 Install Npcap (In this PC is already have)\
-![alt text](image/image-8.png)
+![alt text](image/LAB0&LAB1/image-8.png)
 
 Install USBPcap and wireshark\
-![alt text](image/image-9.png)
+![alt text](image/LAB0&LAB1/image-9.png)
 
 Reboot PC\
-![alt text](image/image-10.png)
+![alt text](image/LAB0&LAB1/image-10.png)
 
 ## 2. Capture packets: access the YouTube homepage (https://www.youtube.com/)
 
 
-![alt text](image/image-34.png)
+![alt text](image/LAB0&LAB1/image-34.png)
 
 ### 2.1 What is the IP address and port of the YouTube homepage (https://www.youtube.com/)?
 
@@ -70,19 +70,19 @@ Reboot PC\
 
 ### 2.3 What is the process of the TCP three-way handshake?
 - SYN: Client sends SYN to server.\
-![alt text](image/image-31.png)
+![alt text](image/LAB0&LAB1/image-31.png)
 
 - SYN-ACK: Server replies with SYN-ACK.\
-![alt text](image/image-32.png)
+![alt text](image/LAB0&LAB1/image-32.png)
 
 - ACK: Client sends ACK. Connection established.\
-![alt text](image/image-33.png)
+![alt text](image/LAB0&LAB1/image-33.png)
 
 
 ## 3. Use the filter dns to find a DNS packet
 
 Interestingly, if you use Brave as your browser, you might not be able to catch `dns` packets because of its default settings.\
-![alt text](image/image-16.png)
+![alt text](image/LAB0&LAB1/image-16.png)
 
 ### 3.1 What is the IP address and port of the DNS server?
 - IP adress is `192.168.1.1`, port is `53` (from Dst Port).
@@ -93,7 +93,7 @@ Interestingly, if you use Brave as your browser, you might not be able to catch 
 
 ### 3.3 Which protocol(s) does this DNS packet use? (List the protocols from Layer 2 — Link Layer — up to Layer 5 — Application Layer in the TCP/IP five-layer model.)
 
-![alt text](image/image-17.png)
+![alt text](image/LAB0&LAB1/image-17.png)
 
 - Layer 2 (Link Layer): Ethernet II
 - Layer 3 (Network Layer): Internet Protocol Version 4 (IPv4)
@@ -107,14 +107,14 @@ Interestingly, if you use Brave as your browser, you might not be able to catch 
 
 ### 4.2 What is the IP address and port of the server hosting this page?
 
-![alt text](image/image-18.png)
+![alt text](image/LAB0&LAB1/image-18.png)
 
 - IP adress: `61.183.8.129`, port is 80 (from Dst Port).
 ### 4.3 What is the request method?
 - GET
 ### 4.4 What is the response status code, and what does it mean?
 
-![alt text](image/image-19.png)
+![alt text](image/LAB0&LAB1/image-19.png)
 - As we can see, a lot of packet showing that
 ```
 HTTP/1.1 200 OK
@@ -244,7 +244,7 @@ Submit:
 - A screenshot showing the opened capture. — 2 points
 - A screenshot showing NR RRC packets after applying `nr-rrc`. — 5 points
 
-![alt text](image/image-20.png)
+![alt text](image/LAB0&LAB1/image-20.png)
 ---
 
 ## 5. Identify the Basic 5G SA Architecture
@@ -273,11 +273,11 @@ Complete the table:
 
 | Component | IP address | Evidence from the capture |
 |---|---|---|
-| UE PDU address | `10.0.0.2` |![alt text](image/image-26.png)|
-| gNB | `192.168.70.129` |![alt text](image/image-24.png) |
-| AMF | `192.168.70.132` |![alt text](image/image-24.png)|
-| UPF | `192.168.70.134` | ![alt text](image/image-26.png) |
-| Data Network | `192.168.70.135` | ![alt text](image/image-26.png) |
+| UE PDU address | `10.0.0.2` |![alt text](image/LAB0&LAB1/image-26.png)|
+| gNB | `192.168.70.129` |![alt text](image/LAB0&LAB1/image-24.png) |
+| AMF | `192.168.70.132` |![alt text](image/LAB0&LAB1/image-24.png)|
+| UPF | `192.168.70.134` | ![alt text](image/LAB0&LAB1/image-26.png) |
+| Data Network | `192.168.70.135` | ![alt text](image/LAB0&LAB1/image-26.png) |
 
 Complete the interface table:
 
@@ -454,7 +454,7 @@ Find one ICMP Echo Request and its Echo Reply. Confirm that the UE's IP packet i
 
 Answer:
 
-![alt text](image/image-30.png)
+![alt text](image/LAB0&LAB1/image-30.png)
 1. What IPv4 address was assigned to the UE?
 - `10.0.0.2`
 2. How many ICMP Echo Request/Reply pairs are present?

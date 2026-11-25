@@ -65,7 +65,7 @@ Observe their terminal outputs and locate evidence of the following stages.
 
 Take screenshots showing the gNB and UE successfully connected.
 
-![alt text](image/image-45.png)
+![alt text](image/LAB3/image-45.png)
 **Questions:**
 
 1. Does a successful NG Setup guarantee that a UE can register? Explain.
@@ -115,7 +115,7 @@ Complete the table:
 
 Take one screenshot showing the TCP connection.
 
-![alt text](image/image-46.png)
+![alt text](image/LAB3/image-46.png)
 
 **Questions:**
 
@@ -156,7 +156,7 @@ Record:
 
 Take a screenshot of the Ping result.
 
-![alt text](image/image-47.png)
+![alt text](image/LAB3/image-47.png)
 
 **Questions:**
 
@@ -294,10 +294,10 @@ Confirm that the UE successfully registers again and that Ping works.
 - The UE registered successfully with the original IMSI, established its PDU Session, and successfully pinged the External DN.
 
 Evidence of `--uicc0.imsi 001010000000099`, 
-![alt text](image/image-48.png)
+![alt text](image/LAB3/image-48.png)
 
 Evidence of `--uicc0.imsi 001010000000001`,
-![alt text](image/image-49.png)
+![alt text](image/LAB3/image-49.png)
 
 Submit evidence from both the failed and recovered connections.
 

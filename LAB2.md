@@ -222,12 +222,12 @@ Complete the table for `pattern1`:
 
 `tdd-dl-heavy-sib1.pcapng`: 
 
-![alt text](image/image-35.png)
+![alt text](image/LAB2/image-35.png)
 
 
 `tdd-balanced-sib1.pcapng`: 
 
-![alt text](image/image-36.png)
+![alt text](image/LAB2/image-36.png)
 If `pattern2` is present, add another table containing its period and four slot/symbol counts. It uses the same reference SCS.
 
 Take **one screenshot per configuration** showing the selected SIB1 packet and the expanded TDD fields. Include `pattern2` in an additional screenshot if it is present and does not fit.
@@ -273,10 +273,10 @@ Flexible symbols = Total symbols - Configured DL symbols - Configured UL symbols
 Configured UL symbol share (%) = Configured UL symbols ÷ Total symbols × 100
 ```
 balanced_tdd_pattern: <br>
-![alt text](image/balanced_tdd_pattern.png)
+![alt text](image/LAB2/balanced_tdd_pattern.png)
 
 dl_heavy_tdd_pattern: <br>
-![alt text](image/dl_heavy_tdd_pattern.png)
+![alt text](image/LAB2/dl_heavy_tdd_pattern.png)
 
 
 For two patterns, sum the counts and durations of both patterns before calculating the share. These are symbol-count shares of the common configuration, not exact airtime measurements or measured throughput shares.
@@ -406,7 +406,7 @@ Meaning:
 
 Take one screenshot showing the selected packet and these fields.
 
-![alt text](image/image-38.png)
+![alt text](image/LAB2/image-38.png)
 
 > Some GTP packets are echo or control-related packets. Select one that contains an inner IPv4 packet.
 
@@ -431,13 +431,13 @@ Record the number of displayed packets:
 | C | 12|
 
 Scenario A
-![alt text](image/image-39.png)
+![alt text](image/LAB2/image-39.png)
 
 Scenario B
-![alt text](image/image-41.png)
+![alt text](image/LAB2/image-41.png)
 
 Scenario C
-![alt text](image/image-40.png)
+![alt text](image/LAB2/image-40.png)
 
 > Report the number displayed by Wireshark using the specified filter. Counts may vary with Wireshark analysis settings. Include screenshots showing the filter and displayed count for each scenario. The filter includes any TCP flows that Wireshark can decode in the capture; a displayed retransmission is not, by itself, proof of loss in the UDP test.
 
@@ -487,13 +487,13 @@ Record the scenario, display filter, packet numbers, and time interval.
 | `scenario-c-balanced-uplink.pcapng`| udp.time_delta| 1509| 942 ms|
 
 `scenario-a-dl-heavy-downlink.pcapng`: <br>
-![alt text](image/image-43.png)
+![alt text](image/LAB2/image-43.png)
 
 `scenario-b-dl-heavy-uplink.pcapng`: <br>
-![alt text](image/image-44.png)
+![alt text](image/LAB2/image-44.png)
 
 `scenario-c-balanced-uplink.pcapng`: <br>
-![alt text](image/image-42.png)
+![alt text](image/LAB2/image-42.png)
 
 **Note:** The time interval depends on the applied display filter. Make sure the selected packets are distinct data packets, not duplicated observations from different capture points. Do not use their interval to infer the TDD slot pattern.
 

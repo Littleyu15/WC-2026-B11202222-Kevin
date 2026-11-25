@@ -89,7 +89,7 @@ grep -nE \
   targets/PROJECTS/GENERIC-NR-5GC/CONF/gnb-cu.sa.f1.conf \
   targets/PROJECTS/GENERIC-NR-5GC/CONF/gnb-du.sa.band78.106prb.rfsim.pci0.conf
 ```
-![alt text](image/image-50.png)
+![alt text](image/LAB4/image-50.png)
 **Record:** 
 - The CU F1 addresses: 127.0.0.3
 - The DU F1 addresses: 127.0.0.4 
@@ -173,13 +173,13 @@ ping -I oaitun_ue1 -c 10 192.168.70.135
 **Evidence:** Screenshots of CU/DU startup, UE connection, and successful Ping. Record the observed UE IP, transmitted/received packets, packet loss, and average RTT. Do **not** invent values; they vary by machine.
 
 CU/DU startup <br>
-![alt text](image/image-51.png)
+![alt text](image/LAB4/image-51.png)
 
 UE connection<br>
-![alt text](image/image-52.png)
+![alt text](image/LAB4/image-52.png)
 
 successful Ping<br>
-![alt text](image/image-53.png)
+![alt text](image/LAB4/image-53.png)
 
 ---
 
@@ -265,10 +265,10 @@ Find and record these messages:
 **Observed classroom sequence:** The successful capture contained SCTP association, F1 Setup Request/Response, DU Configuration Update/Acknowledgement, RRC Setup messages, Authentication signaling carried through RRC, UE Context Setup/Modification, and RRC Reconfiguration. The exact packet numbers and timing are **not fixed**.
 
 The gNB establishment<br>
-![alt text](image/image-55.png)
+![alt text](image/LAB4/image-55.png)
 
 UE connection<br>
-![alt text](image/image-56.png)
+![alt text](image/LAB4/image-56.png)
 
 **Questions**
 
@@ -322,7 +322,7 @@ Internet Protocol (outer CU/DU addresses)
 **Important:** The classroom trace showed repeated `GTP T-PDU` packets from `127.0.0.4` (DU) to `127.0.0.3` (CU), confirming traffic on the CU–DU user-plane path. The actual TEID was **not recorded** in the provided screenshot: read the TEID from your own packet details instead of assuming a value.
 
 `GTP T-PDU` packets from `127.0.0.4` (DU) to `127.0.0.3` (CU) <br>
-![alt text](image/image-57.png)
+![alt text](image/LAB4/image-57.png)
 
 
 ### Distinguish F1-U from N3

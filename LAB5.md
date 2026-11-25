@@ -86,7 +86,7 @@ grep -nE 'Starting cell search|Initial sync successful' lab5-artifacts/Lab5-ue.l
 ```
 
 **Output**
-![alt text](image/image-58.png)
+![alt text](image/LAB5/image-58.png)
 
 
 
@@ -104,7 +104,7 @@ nr-rrc
 
 Find one `MIB` packet and one `SIB1` packet. Record the frame number of each and provide screenshots.
 
-![alt text](image/image-60.png)
+![alt text](image/LAB5/image-60.png)
 - Frame number of MIB: 609
 - Frame number of SIB1: 610
 
@@ -124,7 +124,7 @@ grep -nE 'PRACH' lab5-artifacts/Lab5-ue.log
 Record the Msg1 log line number. From the line that shows the actual PRACH transmission, find:
 
 **Output**
-![alt text](image/image-61.png)
+![alt text](image/LAB5/image-61.png)
 ```text
 frame.slot = ___553.19___
 preambleIndex = ___16___
@@ -137,7 +137,7 @@ RACH Preamble chosen
 ```
 
 **Output**
-![alt text](image/image-62.png)
+![alt text](image/LAB5/image-62.png)
 
 After locating the PRACH event recorded by the gNB tracer, record:
 
@@ -181,7 +181,7 @@ nr-rrc.rrcSetupRequest_element
 Expand `UL-CCCH-Message → rrcSetupRequest` and find:
 
 **Output**
-![alt text](image/image-63.png)
+![alt text](image/LAB5/image-63.png)
 ```text
 Frame number = ___554___
 Context RNTI = ___61982___
@@ -242,7 +242,7 @@ Context RNTI = ___61982___
 rrc-TransactionIdentifier = ___1___
 ```
 **Output**
-![alt text](image/image-64.png)
+![alt text](image/LAB5/image-64.png)
 
 Below the screenshot, briefly answer:
 
@@ -270,7 +270,7 @@ State = NR_RRC_CONNECTED: line ___90___
 Generating RRCSetupComplete: line ___93___
 ```
 **Output**
-![alt text](image/image-66.png)
+![alt text](image/LAB5/image-66.png)
 
 Submit a screenshot of this log output and briefly answer:
 
