@@ -92,7 +92,7 @@ grep -nE 'Starting cell search|Initial sync successful' lab5-artifacts/Lab5-ue.l
 
 Record whether UE synchronization succeeded and the PCI value. Explain: after completing initial synchronization, what is the UE able to do?
 - PCI value: 0
-- After completing initial synchroniztion, the UE will decode the MIB and get the SIB1 infomation, to start the initial access.
+- Synchronization succeeded. After initial synchronization, the UE decodes the MIB and uses its scheduling information to acquire SIB1, then continues initial access.
 
 #### Step 2: Find MIB and SIB1 — 8 points
 
@@ -110,7 +110,8 @@ Find one `MIB` packet and one `SIB1` packet. Record the frame number of each and
 
 MIB and SIB1 are repeatedly broadcast system-information messages. The UE must obtain the common configuration before it can continue the access procedure. Briefly explain the purpose of MIB and SIB1 for UE access.
 
-- The purpose of SIB1 is let UE know which PRACH configuration the gNB using.
+- The MIB provides basic cell information and the scheduling information needed to acquire SIB1. 
+- SIB1 provides the cell-access and common radio configuration, including the PRACH configuration the UE needs for Random Access.
 
 #### Step 3: Find Msg1 PRACH — 8 points
 
@@ -149,14 +150,12 @@ This packet is displayed as `MAC-LTE RACH Preamble chosen`; it is the OAI tracer
 Submit one UE-log screenshot and one Wireshark screenshot. Briefly answer:
 
 1. Which Random Access message is this PRACH transmission?
-```
-[PHY]    PRACH [UE 0] in frame.slot 553.19, placing PRACH in position 2828, Msg1/MsgA-Preamble frequency start 0 (k1 0), preamble_offset 3, first_nonzero_root_idx 0, preambleIndex = 16
-```
+- This PRACH preamble transmission is Msg1 in four-step Random Access.
 2. At which `frame.slot` and with which `preambleIndex` does the UE log show transmission?
 - `frame.slot`: 553.19
 - `preambleIndex`: 16
 3. Does the Wireshark `RAPID` match the UE-log `preambleIndex`? What does this show?
-- Yes, the wireshark and `ue.log` match the `RAPID` 16. 
+- Yes. The Wireshark RAPID and UE-log preambleIndex are both 16, showing that the gNB trace and UE log refer to the same PRACH preamble.
 
 #### Step 4: Find Msg2 RAR in Wireshark — 11 points
 
@@ -191,11 +190,10 @@ Context RNTI = ___61982___
 Briefly answer:
 
 1. Does the `Context RNTI` match the `Temporary C-RNTI` in the Task 1 / Step 4 RAR? What does this show?
-- Yes, the `Context RNTI` match the `Temporary C-RNTI`. It shows 
+- Yes. Both are 61982, indicating that the `RRCSetupRequest` is associated with the temporary identifier assigned in the RAR.
 
 2. Can you claim that the RRC connection has been established after seeing only `RRCSetupRequest`? Why or why not?
-- No, after gNB send `RRCSetup`, UE response `RRCSetupComplete`, we can say the RRC connection is established.
-we can not say the RRC connection has been established only seeing `RRCSetupComplete`. 
+- No. `RRCSetupRequest` is the UE's request to establish an RRC connection. The gNB must send `RRCSetup`, and the UE then sends `RRCSetupComplete` to complete the setup procedure.
 
 #### Step 2: Find RRCSetup — 10 points
 
@@ -218,9 +216,9 @@ Check whether `Contention Resolution` also appears in the packet.
 Below the screenshot, briefly answer:
 
 1. Which message is this in four-step Random Access?
-- Msg4, it show the `UE Contention Resolution`.
+- This is Msg4, the downlink response that includes contention resolution.
 2. What does it mean that `Contention Resolution` and `RRCSetup` appear in the same downlink message?
-- 
+- The gNB is both resolving contention for the UE's Msg3 and providing the RRC configuration. Successful contention resolution confirms that this UE was selected for the access attempt; the temporary C-RNTI can then serve as its C-RNTI.
 #### Step 3: Find RRCSetupComplete — 12 points
 
 Clear the previous filter and enter:
@@ -249,9 +247,9 @@ rrc-TransactionIdentifier = ___1___
 Below the screenshot, briefly answer:
 
 1. Does the `Context RNTI` still match the `Temporary C-RNTI` in the RAR?
-- Yes
+- Yes. Both are 61982.
 2. Does the `rrc-TransactionIdentifier` match the `RRCSetup` in Step 2? What is the purpose of this comparison?
-- Yes, `rrc-TransactionIdentifier` match the `RRCSetup`. They are in the same UE access process.
+- Yes. Both are 1. The identifier associates `RRCSetupComplete` with the `RRCSetup` transaction it completes.
 
 
 #### Step 4: Confirm the Final Random Access and RRC Connection Result — 8 points
@@ -281,8 +279,8 @@ Submit a screenshot of this log output and briefly answer:
 - Received NR_RRCSetup
 - State = NR_RRC_CONNECTED
 2. What do `4-Step RA procedure succeeded` and `State = NR_RRC_CONNECTED` each prove?
-- `4-Step RA procedure succeeded`: Means UE is successful attach with gNB, but doesn't connect to the CoreNetwork.
-- `State = NR_RRC_CONNECTED`: Means 
+- `4-Step RA procedure succeeded`: The four-step Random Access procedure completed successfully; this alone does not mean that the UE has registered with the 5GC.
+- `State = NR_RRC_CONNECTED`: The UE has established an RRC connection with the gNB. This does not by itself prove 5GC Registration or PDU Session establishment.
 
 
 ### Task 3: Draw an Initial Access MSC Diagram — 25 points
@@ -290,6 +288,20 @@ Submit a screenshot of this log output and briefly answer:
 Using the log and Wireshark evidence found in Tasks 1 and 2, draw your own Message Sequence Chart (MSC). It must include two vertical lifelines, `UE` and `gNB`, and the following six messages: MIB/SIB1, Msg1, Msg2, Msg3, Msg4, and `RRCSetupComplete`.
 
 Determine and draw the correct order and direction of the messages yourself. Add a one-sentence purpose next to each arrow.
+
+```mermaid
+sequenceDiagram
+    participant UE
+    participant gNB
+    Note over UE: Initial state: RRC_IDLE
+    gNB->>UE: MIB/SIB1 — provide cell and common access configuration
+    UE->>gNB: Msg1 PRACH — request access with a random-access preamble
+    gNB->>UE: Msg2 RAR — provide timing advance, uplink grant, and temporary C-RNTI
+    UE->>gNB: Msg3 RRCSetupRequest — request an RRC connection
+    gNB->>UE: Msg4 RRCSetup + contention resolution — resolve contention and provide RRC configuration
+    UE->>gNB: RRCSetupComplete — confirm completion of RRC setup
+    Note over UE: After setup: RRC_CONNECTED
+```
 
 | Item | Points |
 |---|---:|
