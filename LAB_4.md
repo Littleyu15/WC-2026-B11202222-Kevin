@@ -109,6 +109,7 @@ grep -nE \
   - F1-C(Control plane): F1 Setup, RRC, UE Context
   - F1-U(User plane): G-PDU, encapsulated data
 3. Why must the UE radio frequency be compatible with the DU rather than taken blindly from the previous lab?
+- The DU configuration determines the NR carrier and SSB frequency. In this classroom split setup, the DU uses SSB NR-ARFCN `630048` (3,450.72 MHz), so the UE must use `-C 3450720000` to receive the SSB and complete radio synchronization. Reusing the Lab 3 monolithic gNB value `3619200000` may place the UE on a different carrier, preventing SIB1 decoding and RRC establishment.
 
 ---
 
@@ -272,14 +273,15 @@ UE connection<br>
 **Questions**
 
 1. Which node initiates F1 Setup, and which acknowledges it?
-- The DU initiate the F1 Setup, then CU acknokledges it. 
+- The DU initiates F1 Setup by sending `F1 Setup Request`; the CU acknowledges it with `F1 Setup Response`.
 2. Explain the difference between SCTP association establishment and F1 Setup.
-- SCTP check whether the DU and CU is connected or not, F1 Setup establish the CU and DU.
+- SCTP association establishment creates the underlying reliable transport connection and performs the SCTP INIT/INIT_ACK/COOKIE exchange. F1 Setup is the subsequent application-level procedure in which the DU advertises its served cells and capabilities and the CU accepts the DU for F1 operation.
 3. How can a NAS Registration Request be transported over F1-C?
-- 
+- NAS is carried as an RRC payload rather than as a separate F1AP transport protocol. After the UE sends RRC Setup Request, the DU forwards it over F1-C in `Initial UL RRC Message Transfer`. The UE's NAS Registration Request is embedded in the subsequent RRC Setup Complete message, also forwarded by the DU to the CU over F1-C in `UL RRC Message Transfer`. The CU then forwards the NAS message toward the AMF over N2/NGAP.
 4. What is the role of UE Context Setup?
-- 
+- `UE Context Setup` is a CU-to-DU procedure that establishes UE-specific radio resources after the UE has attached. The CU provides the DU with information such as the UE identity/C-RNTI, RRC configuration, RLC/MAC/PHY-related configuration and applicable DRB/GTP-U tunnel information. The DU returns `UE Context Setup Response` to confirm the resources it created.
 5. Does F1 Setup alone prove successful UE Registration? Explain.
+- No. F1 Setup proves only that the DU and CU are associated and have exchanged F1 configuration successfully. UE Registration additionally requires RRC synchronization and setup, NAS registration with the AMF, authentication/security, UE Context setup/modification and PDU session establishment.
 
 **Evidence:** Screenshot with F1 Setup Request/Response and screenshot with at least three UE-associated F1AP messages. Include packet numbers and source/destination addresses.
 
@@ -335,10 +337,15 @@ Identify the interface using the actual source/destination endpoints and configu
 **Questions**
 
 1. Which transport protocol carries F1-U?
+- F1-U carries user-plane data over GTP-U inside UDP, normally on UDP port `2152`.
 2. What does a GTP-U **TEID** identify?
+- A Tunnel Endpoint Identifier (TEID) identifies the receiving endpoint of a specific GTP-U tunnel. It associates packets with a UE bearer/PDU-session-related tunnel resource at the sender and receiver; it is not a global UE address and may differ at each tunnel endpoint.
 3. Which direction is `127.0.0.4 → 127.0.0.3` in this setup?
+- `127.0.0.4` is the DU and `127.0.0.3` is the CU, so packets in the `127.0.0.4 → 127.0.0.3` direction carry UE uplink traffic from the DU toward the CU. The reverse direction, `127.0.0.3 → 127.0.0.4`, carries UE downlink traffic.
 4. How would you distinguish F1-U from N3 in a packet capture?
+- Identify the outer IP endpoints and the configured interface, not merely the GTP-U protocol or UDP 2152. F1-U is GTP-U between DU `127.0.0.4` and CU `127.0.0.3` in this setup. N3 is GTP-U between the CU/gNB and the 5GC UPF, so its endpoints include the CU and UPF addresses rather than the DU-CU pair.
 5. Why do F1-C and F1-U use different transport protocols?
+- F1-C carries control procedures through F1AP and uses SCTP for reliable, ordered, association-based transport with F1AP message streams. F1-U carries time-sensitive user packets through GTP-U/UDP; UDP provides a lightweight IP transport for encapsulated per-bearer PDUs, while F1-U data may tolerate the normal IP retransmission and congestion behavior of the UE/application above GTP-U.
 
 **Evidence:** Screenshot of at least one GTP-U T-PDU, with outer IP addresses, UDP ports, message type, and TEID visible. Record the observed UL and DL packet counts (if both directions are present). Do not assume equal counts.
 
@@ -350,16 +357,16 @@ Complete the table:
 
 | Feature | Lab 3: Monolithic gNB | Lab 4: CU/DU Split |
 |---|---|---|
-| Number of RAN processes |2: cn5g, gNB |3: cn5g, cu, du |
-| Location of RRC/PDCP | RAN | O-CU |
-| Location of RLC/MAC/PHY | RAN | O-DU |
+| Number of RAN processes | One monolithic gNB process; CN5G is separate | Two RAN processes: gNB-CU and gNB-DU; CN5G is separate |
+| Location of RRC/PDCP | In the monolithic gNB | In the gNB-CU |
+| Location of RLC/MAC/PHY | In the monolithic gNB | In the gNB-DU |
 | F1-C interface present? | No | Yes |
 | F1-U interface present? | No | Yes |
 | UE connected to the same 5GC? | Yes | Yes |
-| End-to-end Ping works? | work | work |
+| End-to-end Ping works? | Yes, if Lab 3 is completed successfully | Yes, after PDU session and tunnel establishment |
 
 Explain in **3–5 sentences** why splitting a gNB changes the internal RAN interfaces but does not change the UE's need for synchronization, registration and a PDU session.
-- The split of RAN is for better control in the future, also we can change another CU element like OCUDU, let RAN become more flexible.
+Splitting the gNB separates the upper and lower RAN functions and introduces F1-C and F1-U between the CU and DU, while keeping the CU connected to the same 5GC over N2 and N3. This changes internal RAN signaling and data transport, but it does not remove the UE's radio synchronization and RRC procedures. The UE must still acquire SIB1 and SSB information from the DU, establish RRC, and complete NAS Registration through the CU and 5GC. The UE must also receive an IP tunnel and an established PDU session for end-to-end connectivity. Therefore, F1 Setup and a successful Ping are separate milestones: one validates CU-DU integration, while the other validates the complete UE, core and external-DN path.
 ---
 
 ## 9. Troubleshooting
